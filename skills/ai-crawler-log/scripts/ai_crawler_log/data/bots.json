@@ -1,0 +1,808 @@
+{
+ "version": 1,
+ "bots": [
+  {
+   "name": "ChatGPT-User",
+   "operator": "OpenAI",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://openai.com/chatgpt-user.json"
+    ]
+   },
+   "robots_token": "ChatGPT-User"
+  },
+  {
+   "name": "ChatGPT Agent",
+   "operator": "OpenAI",
+   "category": "agent",
+   "ua": [
+    "ChatGPT Agent",
+    "ChatGPT-Agent"
+   ],
+   "robots_token": "ChatGPT-User"
+  },
+  {
+   "name": "OAI-SearchBot",
+   "operator": "OpenAI",
+   "category": "search",
+   "verify": {
+    "ip_ranges": [
+     "https://openai.com/searchbot.json"
+    ]
+   },
+   "robots_token": "OAI-SearchBot"
+  },
+  {
+   "name": "GPTBot",
+   "operator": "OpenAI",
+   "category": "training",
+   "verify": {
+    "ip_ranges": [
+     "https://openai.com/gptbot.json"
+    ]
+   },
+   "robots_token": "GPTBot"
+  },
+  {
+   "name": "OAI-AdsBot",
+   "operator": "OpenAI",
+   "category": "other-ai",
+   "robots_token": "OAI-AdsBot"
+  },
+  {
+   "name": "Claude-User",
+   "operator": "Anthropic",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://claude.com/crawling/bots.json"
+    ]
+   },
+   "robots_token": "Claude-User"
+  },
+  {
+   "name": "Claude-SearchBot",
+   "operator": "Anthropic",
+   "category": "search",
+   "verify": {
+    "ip_ranges": [
+     "https://claude.com/crawling/bots.json"
+    ]
+   },
+   "robots_token": "Claude-SearchBot"
+  },
+  {
+   "name": "ClaudeBot",
+   "operator": "Anthropic",
+   "category": "training",
+   "verify": {
+    "ip_ranges": [
+     "https://claude.com/crawling/bots.json"
+    ]
+   },
+   "robots_token": "ClaudeBot"
+  },
+  {
+   "name": "Claude-Web",
+   "operator": "Anthropic",
+   "category": "training",
+   "verify": {
+    "ip_ranges": [
+     "https://claude.com/crawling/bots.json"
+    ]
+   },
+   "robots_token": "Claude-Web",
+   "note": "legacy"
+  },
+  {
+   "name": "anthropic-ai",
+   "operator": "Anthropic",
+   "category": "training",
+   "verify": {
+    "ip_ranges": [
+     "https://claude.com/crawling/bots.json"
+    ]
+   },
+   "robots_token": "anthropic-ai",
+   "note": "legacy"
+  },
+  {
+   "name": "Perplexity-User",
+   "operator": "Perplexity",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://www.perplexity.ai/perplexity-user.json"
+    ]
+   },
+   "robots_token": "Perplexity-User"
+  },
+  {
+   "name": "PerplexityBot",
+   "operator": "Perplexity",
+   "category": "search",
+   "verify": {
+    "ip_ranges": [
+     "https://www.perplexity.ai/perplexitybot.json"
+    ]
+   },
+   "robots_token": "PerplexityBot"
+  },
+  {
+   "name": "Gemini-Deep-Research",
+   "operator": "Google",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json"
+    ],
+    "rdns": [
+     "google.com",
+     "googleusercontent.com"
+    ]
+   },
+   "robots_token": "Gemini-Deep-Research"
+  },
+  {
+   "name": "Google-NotebookLM",
+   "operator": "Google",
+   "category": "user",
+   "ua": [
+    "Google-NotebookLM",
+    "NotebookLM"
+   ],
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json"
+    ],
+    "rdns": [
+     "google.com",
+     "googleusercontent.com"
+    ]
+   },
+   "robots_token": "Google-NotebookLM"
+  },
+  {
+   "name": "GoogleAgent-URLContext",
+   "operator": "Google",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json"
+    ],
+    "rdns": [
+     "google.com",
+     "googleusercontent.com"
+    ]
+   },
+   "robots_token": "GoogleAgent-URLContext"
+  },
+  {
+   "name": "Google-Agent",
+   "operator": "Google",
+   "category": "agent",
+   "ua": [
+    "Google-Agent",
+    "GoogleAgent-Mariner"
+   ],
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json"
+    ],
+    "rdns": [
+     "google.com",
+     "googleusercontent.com"
+    ]
+   },
+   "robots_token": "Google-Agent"
+  },
+  {
+   "name": "Google-CloudVertexBot",
+   "operator": "Google",
+   "category": "other-ai",
+   "verify": {
+    "rdns": [
+     "google.com",
+     "googleusercontent.com"
+    ]
+   },
+   "robots_token": "Google-CloudVertexBot"
+  },
+  {
+   "name": "GoogleOther",
+   "operator": "Google",
+   "category": "other-ai",
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/common-crawlers.json"
+    ],
+    "rdns": [
+     "googlebot.com",
+     "google.com"
+    ]
+   },
+   "robots_token": "GoogleOther",
+   "note": "R&D / one-off crawls"
+  },
+  {
+   "name": "AzureAI-SearchBot",
+   "operator": "Microsoft",
+   "category": "search",
+   "robots_token": "AzureAI-SearchBot"
+  },
+  {
+   "name": "meta-externalfetcher",
+   "operator": "Meta",
+   "category": "user",
+   "robots_token": "meta-externalfetcher"
+  },
+  {
+   "name": "meta-webindexer",
+   "operator": "Meta",
+   "category": "search",
+   "robots_token": "meta-webindexer"
+  },
+  {
+   "name": "meta-externalagent",
+   "operator": "Meta",
+   "category": "training",
+   "robots_token": "meta-externalagent"
+  },
+  {
+   "name": "FacebookBot",
+   "operator": "Meta",
+   "category": "training",
+   "robots_token": "FacebookBot"
+  },
+  {
+   "name": "Applebot",
+   "operator": "Apple",
+   "category": "search",
+   "verify": {
+    "ip_ranges": [
+     "https://search.developer.apple.com/applebot.json"
+    ],
+    "rdns": [
+     "applebot.apple.com"
+    ]
+   },
+   "robots_token": "Applebot"
+  },
+  {
+   "name": "Amzn-User",
+   "operator": "Amazon",
+   "category": "user",
+   "robots_token": "Amzn-User"
+  },
+  {
+   "name": "Amzn-SearchBot",
+   "operator": "Amazon",
+   "category": "search",
+   "robots_token": "Amzn-SearchBot"
+  },
+  {
+   "name": "Amazonbot",
+   "operator": "Amazon",
+   "category": "training",
+   "verify": {
+    "rdns": [
+     "crawl.amazonbot.amazon"
+    ]
+   },
+   "robots_token": "Amazonbot"
+  },
+  {
+   "name": "MistralAI-User",
+   "operator": "Mistral",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://mistral.ai/mistralai-user-ips.json"
+    ]
+   },
+   "robots_token": "MistralAI-User"
+  },
+  {
+   "name": "MistralAI-Index",
+   "operator": "Mistral",
+   "category": "search",
+   "robots_token": "MistralAI-Index"
+  },
+  {
+   "name": "MistralAI-Training",
+   "operator": "Mistral",
+   "category": "training",
+   "robots_token": "MistralAI-Training"
+  },
+  {
+   "name": "DuckAssistBot",
+   "operator": "DuckDuckGo",
+   "category": "user",
+   "verify": {
+    "ip_ranges": [
+     "https://duckduckgo.com/duckassistbot.json"
+    ]
+   },
+   "robots_token": "DuckAssistBot"
+  },
+  {
+   "name": "GrokBot",
+   "operator": "xAI",
+   "category": "training",
+   "ua": [
+    "GrokBot",
+    "Grok Bot",
+    "xAI-Grok"
+   ],
+   "robots_token": "GrokBot"
+  },
+  {
+   "name": "YouBot",
+   "operator": "You.com",
+   "category": "search",
+   "robots_token": "YouBot"
+  },
+  {
+   "name": "Bravebot",
+   "operator": "Brave",
+   "category": "search",
+   "robots_token": "Bravebot"
+  },
+  {
+   "name": "PhindBot",
+   "operator": "Phind",
+   "category": "search",
+   "robots_token": "PhindBot"
+  },
+  {
+   "name": "Kimi-User",
+   "operator": "Moonshot",
+   "category": "user",
+   "robots_token": "Kimi-User"
+  },
+  {
+   "name": "Kimi-SearchBot",
+   "operator": "Moonshot",
+   "category": "search",
+   "robots_token": "Kimi-SearchBot"
+  },
+  {
+   "name": "KimiBot",
+   "operator": "Moonshot",
+   "category": "training",
+   "ua": [
+    "KimiBot",
+    "MoonshotBot"
+   ],
+   "robots_token": "KimiBot"
+  },
+  {
+   "name": "DeepSeekBot",
+   "operator": "DeepSeek",
+   "category": "training",
+   "robots_token": "DeepSeekBot"
+  },
+  {
+   "name": "DoubaoBot",
+   "operator": "ByteDance",
+   "category": "training",
+   "robots_token": "DoubaoBot"
+  },
+  {
+   "name": "Bytespider",
+   "operator": "ByteDance",
+   "category": "training",
+   "robots_token": "Bytespider"
+  },
+  {
+   "name": "QwenBot",
+   "operator": "Alibaba",
+   "category": "training",
+   "ua": [
+    "QwenBot",
+    "TongyiBot"
+   ],
+   "robots_token": "QwenBot"
+  },
+  {
+   "name": "YiyanBot",
+   "operator": "Baidu",
+   "category": "training",
+   "ua": [
+    "YiyanBot",
+    "ERNIEBot"
+   ],
+   "robots_token": "YiyanBot"
+  },
+  {
+   "name": "PanguBot",
+   "operator": "Huawei",
+   "category": "training",
+   "robots_token": "PanguBot"
+  },
+  {
+   "name": "ChatGLM-Spider",
+   "operator": "Zhipu",
+   "category": "training",
+   "robots_token": "ChatGLM-Spider"
+  },
+  {
+   "name": "Hunyuan",
+   "operator": "Tencent",
+   "category": "training",
+   "robots_token": "Hunyuan"
+  },
+  {
+   "name": "CCBot",
+   "operator": "Common Crawl",
+   "category": "training",
+   "verify": {
+    "ip_ranges": [
+     "https://index.commoncrawl.org/ccbot.json"
+    ]
+   },
+   "robots_token": "CCBot"
+  },
+  {
+   "name": "cohere-training-data-crawler",
+   "operator": "Cohere",
+   "category": "training",
+   "robots_token": "cohere-training-data-crawler"
+  },
+  {
+   "name": "cohere-ai",
+   "operator": "Cohere",
+   "category": "user",
+   "robots_token": "cohere-ai"
+  },
+  {
+   "name": "Diffbot",
+   "operator": "Diffbot",
+   "category": "training",
+   "robots_token": "Diffbot"
+  },
+  {
+   "name": "Timpibot",
+   "operator": "Timpi",
+   "category": "training",
+   "robots_token": "Timpibot"
+  },
+  {
+   "name": "ImagesiftBot",
+   "operator": "ImageSift",
+   "category": "training",
+   "robots_token": "ImagesiftBot"
+  },
+  {
+   "name": "omgili",
+   "operator": "Webz.io",
+   "category": "training",
+   "ua": [
+    "omgili",
+    "omgilibot"
+   ],
+   "robots_token": "omgili"
+  },
+  {
+   "name": "AI2Bot",
+   "operator": "Allen Institute",
+   "category": "training",
+   "ua": [
+    "AI2Bot",
+    "Ai2Bot-Dolma"
+   ],
+   "robots_token": "AI2Bot"
+  },
+  {
+   "name": "YandexAdditional",
+   "operator": "Yandex",
+   "category": "training",
+   "ua": [
+    "YandexAdditional",
+    "YandexAdditionalBot"
+   ],
+   "verify": {
+    "rdns": [
+     "yandex.ru",
+     "yandex.net",
+     "yandex.com"
+    ]
+   },
+   "robots_token": "YandexAdditional"
+  },
+  {
+   "name": "Googlebot",
+   "operator": "Google",
+   "category": "classic-search",
+   "verify": {
+    "ip_ranges": [
+     "https://developers.google.com/static/crawling/ipranges/common-crawlers.json"
+    ],
+    "rdns": [
+     "googlebot.com",
+     "google.com"
+    ]
+   },
+   "robots_token": "Googlebot",
+   "note": "Also feeds AI Overviews / AI Mode"
+  },
+  {
+   "name": "Bingbot",
+   "operator": "Microsoft",
+   "category": "classic-search",
+   "verify": {
+    "ip_ranges": [
+     "https://www.bing.com/toolbox/bingbot.json"
+    ],
+    "rdns": [
+     "search.msn.com"
+    ]
+   },
+   "robots_token": "Bingbot",
+   "note": "Also feeds Copilot"
+  },
+  {
+   "name": "Baiduspider",
+   "operator": "Baidu",
+   "category": "classic-search",
+   "verify": {
+    "rdns": [
+     "baidu.com",
+     "baidu.jp"
+    ]
+   },
+   "robots_token": "Baiduspider"
+  },
+  {
+   "name": "YandexBot",
+   "operator": "Yandex",
+   "category": "classic-search",
+   "verify": {
+    "rdns": [
+     "yandex.ru",
+     "yandex.net",
+     "yandex.com"
+    ]
+   },
+   "robots_token": "YandexBot"
+  },
+  {
+   "name": "PetalBot",
+   "operator": "Huawei",
+   "category": "classic-search",
+   "verify": {
+    "rdns": [
+     "petalsearch.com"
+    ]
+   },
+   "robots_token": "PetalBot"
+  },
+  {
+   "name": "DuckDuckBot",
+   "operator": "DuckDuckGo",
+   "category": "classic-search",
+   "verify": {
+    "ip_ranges": [
+     "https://duckduckgo.com/duckduckbot.json"
+    ]
+   },
+   "robots_token": "DuckDuckBot"
+  }
+ ],
+ "policy_tokens": [
+  {
+   "token": "Google-Extended",
+   "operator": "Google",
+   "meaning": "Gemini training / grounding opt-out; crawling is done by Googlebot"
+  },
+  {
+   "token": "Applebot-Extended",
+   "operator": "Apple",
+   "meaning": "Apple Intelligence training opt-out; crawling is done by Applebot"
+  },
+  {
+   "token": "Webzio-Extended",
+   "operator": "Webz.io",
+   "meaning": "AI training data resale opt-out"
+  }
+ ],
+ "referrals": [
+  {
+   "source": "ChatGPT",
+   "operator": "OpenAI",
+   "hosts": [
+    "chatgpt.com",
+    "chat.openai.com"
+   ],
+   "utm": [
+    "chatgpt.com",
+    "chatgpt"
+   ]
+  },
+  {
+   "source": "Perplexity",
+   "operator": "Perplexity",
+   "hosts": [
+    "perplexity.ai"
+   ],
+   "utm": [
+    "perplexity",
+    "perplexity.ai"
+   ]
+  },
+  {
+   "source": "Claude",
+   "operator": "Anthropic",
+   "hosts": [
+    "claude.ai"
+   ],
+   "utm": [
+    "claude.ai",
+    "claude"
+   ]
+  },
+  {
+   "source": "Gemini",
+   "operator": "Google",
+   "hosts": [
+    "gemini.google.com",
+    "bard.google.com"
+   ],
+   "utm": [
+    "gemini",
+    "gemini.google.com"
+   ]
+  },
+  {
+   "source": "Copilot",
+   "operator": "Microsoft",
+   "hosts": [
+    "copilot.microsoft.com",
+    "copilot.cloud.microsoft",
+    "edgeservices.bing.com"
+   ],
+   "utm": [
+    "copilot.com",
+    "copilot"
+   ]
+  },
+  {
+   "source": "Meta AI",
+   "operator": "Meta",
+   "hosts": [
+    "meta.ai"
+   ],
+   "utm": [
+    "meta.ai"
+   ]
+  },
+  {
+   "source": "Grok",
+   "operator": "xAI",
+   "hosts": [
+    "grok.com"
+   ],
+   "utm": [
+    "grok.com",
+    "grok"
+   ]
+  },
+  {
+   "source": "Mistral Le Chat",
+   "operator": "Mistral",
+   "hosts": [
+    "chat.mistral.ai"
+   ],
+   "utm": [
+    "chat.mistral.ai"
+   ]
+  },
+  {
+   "source": "DeepSeek",
+   "operator": "DeepSeek",
+   "hosts": [
+    "chat.deepseek.com"
+   ],
+   "utm": [
+    "deepseek"
+   ]
+  },
+  {
+   "source": "Kimi",
+   "operator": "Moonshot",
+   "hosts": [
+    "kimi.moonshot.cn",
+    "kimi.com",
+    "www.kimi.com"
+   ],
+   "utm": [
+    "kimi"
+   ]
+  },
+  {
+   "source": "Doubao",
+   "operator": "ByteDance",
+   "hosts": [
+    "doubao.com"
+   ],
+   "utm": [
+    "doubao"
+   ]
+  },
+  {
+   "source": "Qwen",
+   "operator": "Alibaba",
+   "hosts": [
+    "tongyi.aliyun.com",
+    "tongyi.com",
+    "qianwen.com",
+    "chat.qwen.ai"
+   ],
+   "utm": [
+    "qwen",
+    "tongyi"
+   ]
+  },
+  {
+   "source": "Yuanbao",
+   "operator": "Tencent",
+   "hosts": [
+    "yuanbao.tencent.com"
+   ],
+   "utm": [
+    "yuanbao"
+   ]
+  },
+  {
+   "source": "ERNIE",
+   "operator": "Baidu",
+   "hosts": [
+    "yiyan.baidu.com"
+   ],
+   "utm": [
+    "yiyan"
+   ]
+  },
+  {
+   "source": "You.com",
+   "operator": "You.com",
+   "hosts": [
+    "you.com"
+   ],
+   "utm": [
+    "you.com"
+   ]
+  },
+  {
+   "source": "Phind",
+   "operator": "Phind",
+   "hosts": [
+    "phind.com"
+   ],
+   "utm": [
+    "phind"
+   ]
+  },
+  {
+   "source": "Poe",
+   "operator": "Quora",
+   "hosts": [
+    "poe.com"
+   ],
+   "utm": [
+    "poe"
+   ]
+  },
+  {
+   "source": "DuckDuckGo AI",
+   "operator": "DuckDuckGo",
+   "hosts": [
+    "duck.ai"
+   ],
+   "utm": [
+    "duck.ai"
+   ]
+  }
+ ]
+}

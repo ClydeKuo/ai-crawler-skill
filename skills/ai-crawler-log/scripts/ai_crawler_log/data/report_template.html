@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="__LANG__">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="ai-crawler-log">
+<link rel="icon" href="data:,">
+<title>__TITLE__</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface-1: #fcfcfb; --surface-2: #f3f2ee;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300;
+  --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b; --neutral: #c3c2b7;
+  --track: #e8eef8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #232321;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #0ca30c;
+    --neutral: #5a5955; --track: #1f2a3a;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #232321;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #0ca30c;
+  --neutral: #5a5955; --track: #1f2a3a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.viz-root { background: var(--page); color: var(--text-primary); min-height: 100vh;
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
+header h1 { font-size: 24px; margin: 0 0 4px; font-weight: 650; }
+header .sub { color: var(--text-secondary); }
+.filters { display: flex; gap: 12px; align-items: center; margin: 20px 0 8px; flex-wrap: wrap; }
+.filters label { color: var(--text-secondary); }
+select, button { font: inherit; color: var(--text-primary); background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 10px; }
+section.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
+section.card h2 { font-size: 17px; margin: 0 0 4px; font-weight: 650; }
+section.card .lead { color: var(--text-secondary); margin: 0 0 16px; max-width: 860px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 16px 0; }
+.tiles.kpi { grid-template-columns: 1.6fr repeat(5, 1fr); }
+@media (max-width: 1000px) { .tiles.kpi { grid-template-columns: repeat(2, 1fr); } }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .label { color: var(--text-secondary); font-size: 13px; }
+.tile .value { font-size: 26px; font-weight: 600; margin-top: 2px; }
+.tile .note { color: var(--text-muted); font-size: 12px; }
+.tiles:not(.kpi) .tile.hero { grid-column: span 2; }
+.tile.hero .value { font-size: 48px; line-height: 1.1; }
+.warn { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; border-radius: 8px; background: var(--surface-2); margin: 8px 0; }
+.warn .icon { flex: none; width: 20px; height: 20px; border-radius: 50%; color: #0b0b0b; font-weight: 700; text-align: center; line-height: 20px; font-size: 13px; }
+.warn .icon.serious { background: var(--serious); } .warn .icon.warning { background: var(--warning); } .warn .icon.critical { background: var(--critical); color: #fff; }
+.warn b { display: block; }
+.warn .detail { color: var(--text-secondary); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--surface-2); padding: 10px 12px; border-radius: 8px; overflow: auto; font-size: 12.5px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: middle; }
+th { color: var(--text-secondary); font-weight: 600; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.path { word-break: break-all; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+.muted { color: var(--text-muted); }
+.chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 4px 0 8px; color: var(--text-secondary); font-size: 13px; }
+.legend .key { display: inline-block; width: 14px; height: 2px; border-radius: 1px; vertical-align: middle; margin-right: 6px; }
+.legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; overflow: visible; }
+.chart svg:focus { outline: 2px solid var(--s1); outline-offset: 4px; border-radius: 4px; }
+.tooltip { position: absolute; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 8px 10px; font-size: 12.5px; min-width: 140px; z-index: 5; display: none; }
+.tooltip .t-head { color: var(--text-secondary); margin-bottom: 4px; }
+.tooltip .t-row { display: flex; align-items: center; gap: 8px; }
+.tooltip .t-row .k { width: 12px; height: 2px; border-radius: 1px; flex: none; }
+.tooltip .t-row .v { font-weight: 650; min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+.tooltip .t-row .n { color: var(--text-secondary); }
+.hbars { display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 6px 12px; align-items: center; }
+.hbars .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
+.hbars .row { display: flex; align-items: center; gap: 8px; outline: none; }
+.hbars .bar { height: 14px; background: var(--s1); border-radius: 0 4px 4px 0; min-width: 2px; }
+.hbars .row:hover .bar, .hbars .row:focus .bar { filter: brightness(1.15); }
+.hbars .val { color: var(--text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.seg { display: flex; gap: 2px; height: 8px; min-width: 90px; width: 100%; }
+.seg span { display: block; height: 8px; }
+.seg span:first-child { border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+.seg span:last-child { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+.meter { height: 8px; background: var(--track); border-radius: 4px; overflow: hidden; min-width: 120px; }
+.meter > span { display: block; height: 100%; background: var(--s1); border-radius: 4px; }
+details.tv { margin-top: 10px; }
+details.tv summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; }
+h3 { font-size: 14px; margin: 8px 0 8px; font-weight: 650; }
+.empty { color: var(--text-muted); padding: 8px 0; }
+footer { color: var(--text-muted); font-size: 12.5px; margin-top: 32px; }
+footer li { margin: 4px 0; }
+.scroll { max-height: 420px; overflow: auto; }
+.theme-toggle { margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="viz-root"><div class="wrap" id="app"></div></div>
+<script type="application/json" id="report-data">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("report-data").textContent);
+  var LANG = document.documentElement.lang.indexOf("zh") === 0 ? "zh" : "en";
+  var I18N = {
+    zh: {
+      title: "AI 爬虫访问报告", site: "站点", allSites: "全部站点", period: "时间范围", days: "天", generated: "生成于",
+      linesParsed: "解析日志行", theme: "切换深浅色",
+      kpiUser: "用户触发的 AI 读取", kpiUserNote: "有人在 ChatGPT / Claude / Perplexity 等提问，AI 当场来读你的页面",
+      kpiAi: "AI 爬虫请求", kpiAiNote: "不含伪装 UA；不含传统搜索引擎", kpiRef: "来自 AI 的真人访问", kpiRefNote: "Referer 或 utm_source 来自 AI 产品",
+      kpiBlocked: "AI 请求被拦截", kpiBlockedNote: "返回 403 / 429 的比例", kpiSpoofed: "伪装 UA 请求", kpiSpoofedNote: "UA 自称 AI 爬虫但 IP 校验失败",
+      kpiCoverage: "sitemap 被 AI 读过", kpiCoverageNote: "至少被一个 AI 爬虫成功抓取（状态码 < 400）",
+      secUser: "AI 实时读取（用户触发）", secUserLead: "这是最接近“被 AI 引用”的信号：用户在 AI 产品里提问或贴链接，AI 当场来抓你的页面。这些页面正在被 AI 拿去回答问题。",
+      secTrend: "访问趋势（按用途）", trendScale: "每张小图使用各自的纵轴。", secTrendLead: "每天的 AI 爬虫请求数，按用途分组。训练类只影响模型的长期记忆；搜索索引和用户触发才决定 AI 回答里会不会出现你。",
+      secBots: "爬虫明细", secBotsLead: "按请求数排序。校验列：已验证 = 命中官方 IP 段或反向 DNS；无法验证 = 厂商未公开校验方式；未知 = 有校验方式但未能执行；伪装 = 校验失败（已从统计中剔除）。",
+      secPages: "最常被抓取的页面", secPagesLead: "只统计页面（不含图片 / CSS / JS / 后台），状态码 < 400。",
+      secCoverage: "从没被 AI 读过的页面", secCoverageLead: "sitemap 中的页面与 AI 实际成功抓取的页面对比。可以和 Googlebot 的覆盖率做对照。",
+      secRef: "AI 带来的真人流量", secRefLead: "从 AI 产品点击过来的访客（Referer 或 utm_source）。把“抓了多少”和“带来多少”放在一起，就是每家 AI 的抓取/引流比。",
+      secRobots: "robots.txt 与 llms.txt", secRobotsLead: "当前 robots.txt 对各 AI 爬虫的策略，以及爬虫是否遵守。注意：违规判定基于报告生成时抓取的 robots.txt，若期间修改过规则可能有偏差。",
+      secSpoof: "伪装 UA", secSpoofLead: "User-Agent 自称是某 AI 爬虫，但 IP 不在官方范围内或反向 DNS 不匹配。通常是抓取器 / 采集器冒充，可以在 WAF 中按 IP 拦截。",
+      bot: "爬虫", operator: "厂商", category: "用途", requests: "请求", pages: "页面数", verification: "校验", blocked: "被拦截", robotsAllowed: "robots.txt 允许 /",
+      lastSeen: "最后访问", path: "页面", visits: "访问", source: "来源", date: "日期", total: "合计", value: "数值",
+      verified: "已验证", unverifiable: "无法验证", unknown: "未知", spoofed: "伪装",
+      cat_user: "用户触发", "cat_search": "AI 搜索索引", cat_training: "训练采集", cat_agent: "AI Agent", "cat_other-ai": "其他 AI", "cat_classic-search": "传统搜索引擎",
+      tableView: "表格视图", noData: "没有数据", yes: "是", no: "否", explicit: "有专门规则", violations: "违规抓取",
+      token: "标记", policyTokens: "策略标记（不会出现在日志 UA 中）", meaning: "含义",
+      llmsExists: "文件存在", llmsFetches: "llms.txt 被读取", robotsFetches: "robots.txt 被读取", notChecked: "未检测",
+      crawls: "AI 抓取", userFetches: "用户触发", referrals: "引流访问", ratio: "抓取 / 引流",
+      sitemapTotal: "sitemap 页面", crawledByAi: "被 AI 读过", neverCrawled: "从未被 AI 读过", showing: "仅显示前 {n} 条，完整列表见 CSV 导出",
+      coverageBy: "各类爬虫覆盖率", landing: "落地页", ip: "IP", humanPv: "真人页面浏览", refShare: "AI 引流占比",
+      w_proxy_unresolved: "日志记录的是 CDN（Cloudflare）的 IP，不是真实访客 IP",
+      w_proxy_unresolved_d: "{site}：{count} 条请求（{share}）来自 Cloudflare IP 且日志里没有 X-Forwarded-For，这些请求无法做 IP 校验。请在 nginx 配置 real_ip（见报告末尾），或在日志格式里加上 \"$http_x_forwarded_for\"。在修好之前，本报告中的“伪装”数也不可靠。",
+      w_unparsed_lines: "部分日志行无法解析", w_unparsed_lines_d: "{site}：{count} 行（{share}）格式不识别，可能是自定义日志格式。",
+      w_no_sitemap: "没有找到 sitemap", w_no_sitemap_d: "{site}：无法计算“从没被抓过的页面”。可用 --sitemap 指定。",
+      w_no_robots: "没有找到 robots.txt", w_no_robots_d: "{site}：无法检查 robots.txt 策略。可用 --robots 指定。",
+      w_offline: "离线模式：未做 IP / DNS 校验", w_offline_d: "所有可校验的爬虫都标为“未知”（使用了已有缓存的除外）。",
+      w_ranges_missing: "部分官方 IP 段下载失败", w_ranges_missing_d: "{urls}",
+      notes: "说明",
+      note1: "Google-Extended、Applebot-Extended 只是 robots.txt 里的策略标记，实际抓取由 Googlebot / Applebot 完成，所以日志里看不到它们。",
+      note2: "Googlebot、Bingbot 作为对照基线列出，不计入 AI 合计；但 Google AI Overviews 和 Microsoft Copilot 使用的就是它们抓取的数据。",
+      note3: "被 CDN 缓存命中的请求不会出现在源站日志中，源站日志会低估爬虫访问量。",
+      note4: "nginx 在 Cloudflare 后面时的 real_ip 配置示例：",
+      generatedBy: "由 ai-crawler-log 生成"
+    },
+    en: {
+      title: "AI crawler report", site: "Site", allSites: "All sites", period: "Period", days: "days", generated: "Generated",
+      linesParsed: "Log lines parsed", theme: "Toggle theme",
+      kpiUser: "User-triggered AI reads", kpiUserNote: "Someone asked ChatGPT / Claude / Perplexity and the AI fetched your page live",
+      kpiAi: "AI crawler requests", kpiAiNote: "Spoofed UAs and classic search engines excluded", kpiRef: "Human visits from AI", kpiRefNote: "Referer or utm_source from an AI product",
+      kpiBlocked: "AI requests blocked", kpiBlockedNote: "Share answered with 403 / 429", kpiSpoofed: "Spoofed UA requests", kpiSpoofedNote: "Claims to be an AI crawler, fails IP check",
+      kpiCoverage: "Sitemap read by AI", kpiCoverageNote: "Fetched successfully (status < 400) by at least one AI crawler",
+      secUser: "Live AI reads (user-triggered)", secUserLead: "The closest signal to being cited by AI: a user asked an AI product a question or pasted a link, and it fetched your page on the spot.",
+      secTrend: "Trend by purpose", trendScale: "Each panel has its own y-axis.", secTrendLead: "Daily AI crawler requests by purpose. Training affects long-term model memory; search indexing and user-triggered fetches decide whether you show up in AI answers.",
+      secBots: "Crawlers", secBotsLead: "Sorted by requests. Verification: verified = official IP range or reverse DNS; unverifiable = operator publishes no method; unknown = method exists but could not run; spoofed = failed (excluded from counts).",
+      secPages: "Most-fetched pages", secPagesLead: "Pages only (no images / CSS / JS / admin), status < 400.",
+      secCoverage: "Pages AI has never read", secCoverageLead: "Sitemap pages vs pages AI crawlers actually fetched. Compare with Googlebot coverage.",
+      secRef: "Human traffic from AI", secRefLead: "Visitors who clicked through from AI products (Referer or utm_source). Put next to crawl volume, this gives each AI's crawl-to-referral ratio.",
+      secRobots: "robots.txt & llms.txt", secRobotsLead: "Current robots.txt policy per AI crawler, and whether crawlers obey it. Violations are judged against the robots.txt fetched when the report was generated.",
+      secSpoof: "Spoofed user agents", secSpoofLead: "The User-Agent claims to be an AI crawler but the IP is outside official ranges or reverse DNS does not match. Usually scrapers in disguise; block by IP in your WAF.",
+      bot: "Crawler", operator: "Operator", category: "Purpose", requests: "Requests", pages: "Pages", verification: "Verification", blocked: "Blocked", robotsAllowed: "robots.txt allows /",
+      lastSeen: "Last seen", path: "Page", visits: "Visits", source: "Source", date: "Date", total: "Total", value: "Value",
+      verified: "Verified", unverifiable: "Unverifiable", unknown: "Unknown", spoofed: "Spoofed",
+      cat_user: "User-triggered", "cat_search": "AI search index", cat_training: "Training", cat_agent: "AI agent", "cat_other-ai": "Other AI", "cat_classic-search": "Classic search",
+      tableView: "Table view", noData: "No data", yes: "Yes", no: "No", explicit: "Own rules", violations: "Violations",
+      token: "Token", policyTokens: "Policy tokens (never appear as a UA)", meaning: "Meaning",
+      llmsExists: "File exists", llmsFetches: "llms.txt fetches", robotsFetches: "robots.txt fetches", notChecked: "not checked",
+      crawls: "AI crawls", userFetches: "User-triggered", referrals: "Referral visits", ratio: "Crawls / referral",
+      sitemapTotal: "Sitemap pages", crawledByAi: "Read by AI", neverCrawled: "Never read by AI", showing: "Showing first {n}; see CSV export for the full list",
+      coverageBy: "Coverage by crawler purpose", landing: "Landing page", ip: "IP", humanPv: "Human page views", refShare: "AI referral share",
+      w_proxy_unresolved: "Logs record CDN (Cloudflare) IPs instead of real client IPs",
+      w_proxy_unresolved_d: "{site}: {count} requests ({share}) came from Cloudflare IPs with no X-Forwarded-For, so they cannot be IP-verified. Configure nginx real_ip (see the end of this report) or log \"$http_x_forwarded_for\". Until then, the spoofed counts in this report are unreliable too.",
+      w_unparsed_lines: "Some log lines could not be parsed", w_unparsed_lines_d: "{site}: {count} lines ({share}) in an unrecognised format.",
+      w_no_sitemap: "No sitemap found", w_no_sitemap_d: "{site}: cannot compute never-crawled pages. Pass --sitemap.",
+      w_no_robots: "No robots.txt found", w_no_robots_d: "{site}: cannot check robots.txt policy. Pass --robots.",
+      w_offline: "Offline mode: no IP / DNS verification", w_offline_d: "Verifiable crawlers are marked unknown unless cached data was available.",
+      w_ranges_missing: "Some official IP range files failed to download", w_ranges_missing_d: "{urls}",
+      notes: "Notes",
+      note1: "Google-Extended and Applebot-Extended are robots.txt policy tokens only; the actual fetching is done by Googlebot / Applebot, so they never appear in logs.",
+      note2: "Googlebot and Bingbot are listed as a baseline and excluded from AI totals, though Google AI Overviews and Microsoft Copilot are built on what they crawl.",
+      note3: "Requests served from a CDN cache never reach the origin, so origin logs undercount crawler traffic.",
+      note4: "nginx behind Cloudflare, real_ip example:",
+      generatedBy: "Generated by ai-crawler-log"
+    }
+  };
+  var T = I18N[LANG];
+  var AI_CATS = ["user", "search", "training", "agent", "other-ai"];
+  var CAT_COLOR = { "user": "var(--s1)", "search": "var(--s2)", "training": "var(--s3)", "agent": "var(--s4)", "other-ai": "var(--s5)", "classic-search": "var(--neutral)" };
+  var STATE_COLOR = { verified: "var(--good)", unverifiable: "var(--neutral)", unknown: "var(--warning)", spoofed: "var(--critical)" };
+  var STATES = ["verified", "unverifiable", "unknown", "spoofed"];
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var LIST_LIMIT = 200;
+
+  // ---------------------------------------------------------------- helpers
+  function el(tag, attrs) {
+    var node = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (attrs[k] == null) continue;
+      if (k === "style") node.style.cssText = attrs[k];
+      else if (k === "text") node.textContent = attrs[k];
+      else if (k.indexOf("on") === 0) node.addEventListener(k.slice(2), attrs[k]);
+      else node.setAttribute(k, attrs[k]);
+    }
+    for (var i = 2; i < arguments.length; i++) append(node, arguments[i]);
+    return node;
+  }
+  function append(node, child) {
+    if (child == null || child === false) return;
+    if (Array.isArray(child)) { child.forEach(function (c) { append(node, c); }); return; }
+    node.appendChild(typeof child === "object" ? child : document.createTextNode(String(child)));
+  }
+  function s(tag, attrs) {
+    var node = document.createElementNS(SVGNS, tag);
+    for (var k in attrs || {}) node.setAttribute(k, attrs[k]);
+    return node;
+  }
+  function fmt(n) { return n == null ? "–" : Number(n).toLocaleString(LANG === "zh" ? "zh-CN" : "en-US"); }
+  function compact(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, "") + "M";
+    if (n >= 1e4) return (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/, "") + "K";
+    return fmt(n);
+  }
+  function pct(x) { return x == null ? "–" : (x * 100).toFixed(x < 0.1 && x > 0 ? 1 : 0) + "%"; }
+  function tr(key, vars) {
+    var str = T[key] || key;
+    for (var k in vars || {}) str = str.split("{" + k + "}").join(vars[k]);
+    return str;
+  }
+  function catLabel(c) { return T["cat_" + c] || c; }
+  function chip(color, label) { return el("span", { "class": "chip" }, el("span", { "class": "dot", style: "background:" + color }), label); }
+  function dayRange(start, end) {
+    var out = [];
+    if (!start || !end) return out;
+    var d = new Date(start + "T00:00:00Z"), e = new Date(end + "T00:00:00Z");
+    while (d <= e && out.length < 3660) { out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); }
+    return out;
+  }
+  function niceMax(v) {
+    if (v <= 0) return 1;
+    var p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+  }
+  function table(headers, rows, numCols) {
+    numCols = numCols || [];
+    if (!rows.length) return el("div", { "class": "empty", text: T.noData });
+    return el("table", null,
+      el("thead", null, el("tr", null, headers.map(function (h, i) { return el("th", { "class": numCols.indexOf(i) >= 0 ? "num" : null, text: h }); }))),
+      el("tbody", null, rows.map(function (r) {
+        return el("tr", null, r.map(function (c, i) {
+          var cls = numCols.indexOf(i) >= 0 ? "num" : (c && c.path ? "path" : null);
+          return el("td", { "class": cls }, c && c.path ? c.path : c);
+        }));
+      })));
+  }
+  function tableView(headers, rows, numCols) {
+    return el("details", { "class": "tv" }, el("summary", { text: T.tableView }), el("div", { "class": "scroll" }, table(headers, rows, numCols)));
+  }
+  function card(title, lead) {
+    var c = el("section", { "class": "card" }, el("h2", { text: title }), lead ? el("p", { "class": "lead", text: lead }) : null);
+    for (var i = 2; i < arguments.length; i++) append(c, arguments[i]);
+    return c;
+  }
+
+  // ---------------------------------------------------------------- tooltip
+  function makeTooltip(container) {
+    var tip = el("div", { "class": "tooltip", role: "status" });
+    container.appendChild(tip);
+    return {
+      show: function (x, y, head, rows) {
+        tip.textContent = "";
+        tip.appendChild(el("div", { "class": "t-head", text: head }));
+        rows.forEach(function (r) {
+          tip.appendChild(el("div", { "class": "t-row" }, el("span", { "class": "k", style: "background:" + r.color }),
+            el("span", { "class": "v", text: fmt(r.value) }), el("span", { "class": "n", text: r.label })));
+        });
+        tip.style.display = "block";
+        var cw = container.clientWidth, tw = tip.offsetWidth;
+        tip.style.left = Math.max(0, Math.min(cw - tw, x + 14)) + "px";
+        tip.style.top = Math.max(0, y - 10) + "px";
+      },
+      hide: function () { tip.style.display = "none"; }
+    };
+  }
+
+  // ---------------------------------------------------------------- line chart
+  function lineChart(dates, series, height) {
+    var box = el("div", { "class": "chart" });
+    var legend = el("div", { "class": "legend" }, series.length > 1 ? series.map(function (sr) {
+      return el("span", null, el("span", { "class": "key", style: "background:" + sr.color }), sr.label);
+    }) : null);
+    var wrap = el("div", null, legend, box);
+    function draw() {
+      box.textContent = "";
+      var W = Math.max(240, box.clientWidth || 800), H = height || 240, m = { l: 48, r: 16, t: 10, b: 28 };
+      var iw = W - m.l - m.r, ih = H - m.t - m.b;
+      var maxV = niceMax(Math.max.apply(null, [0].concat(series.map(function (sr) { return Math.max.apply(null, [0].concat(sr.values)); }))));
+      var x = function (i) { return m.l + (dates.length <= 1 ? iw / 2 : i * iw / (dates.length - 1)); };
+      var y = function (v) { return m.t + ih - v / maxV * ih; };
+      var svg = s("svg", { width: W, height: H, role: "img", tabindex: "0", "aria-label": series.map(function (sr) { return sr.label; }).join(", ") });
+      for (var k = 0; k <= 4; k++) {
+        var v = maxV * k / 4, yy = y(v);
+        svg.appendChild(s("line", { x1: m.l, x2: W - m.r, y1: yy, y2: yy, stroke: k === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 }));
+        var t = s("text", { x: m.l - 8, y: yy + 4, "text-anchor": "end", fill: "var(--text-muted)", "font-size": 11, style: "font-variant-numeric:tabular-nums" });
+        t.textContent = compact(Math.round(v * 100) / 100);
+        svg.appendChild(t);
+      }
+      var step = Math.max(1, Math.ceil(dates.length / Math.floor(iw / 70)));
+      dates.forEach(function (d, i) {
+        if (i % step && i !== dates.length - 1) return;
+        if (i !== dates.length - 1 && x(dates.length - 1) - x(i) < 56) return;
+        var t = s("text", { x: x(i), y: H - 8, "text-anchor": i === 0 ? "start" : i === dates.length - 1 ? "end" : "middle", fill: "var(--text-muted)", "font-size": 11 });
+        t.textContent = d.slice(5);
+        svg.appendChild(t);
+      });
+      series.forEach(function (sr) {
+        var dpath = sr.values.map(function (v, i) { return (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join("");
+        if (series.length === 1) svg.appendChild(s("path", { d: dpath + "L" + x(sr.values.length - 1) + "," + y(0) + "L" + x(0) + "," + y(0) + "Z", fill: sr.color, opacity: 0.1 }));
+        svg.appendChild(s("path", { d: dpath, fill: "none", stroke: sr.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+        var li = sr.values.length - 1;
+        svg.appendChild(s("circle", { cx: x(li), cy: y(sr.values[li]), r: 4, fill: sr.color, stroke: "var(--surface-1)", "stroke-width": 2 }));
+      });
+      var cross = s("line", { y1: m.t, y2: m.t + ih, stroke: "var(--axis)", "stroke-width": 1, visibility: "hidden" });
+      svg.appendChild(cross);
+      var dots = series.map(function (sr) { var c = s("circle", { r: 4, fill: sr.color, stroke: "var(--surface-1)", "stroke-width": 2, visibility: "hidden" }); svg.appendChild(c); return c; });
+      var hit = s("rect", { x: m.l - 6, y: m.t, width: iw + 12, height: ih, fill: "transparent" });
+      svg.appendChild(hit);
+      box.appendChild(svg);
+      var tip = makeTooltip(box), cur = dates.length - 1;
+      function at(i) {
+        cur = i;
+        cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible");
+        dots.forEach(function (c, j) { c.setAttribute("cx", x(i)); c.setAttribute("cy", y(series[j].values[i])); c.setAttribute("visibility", "visible"); });
+        tip.show(x(i), m.t, dates[i], series.map(function (sr) { return { color: sr.color, value: sr.values[i], label: sr.label }; }));
+      }
+      function off() { cross.setAttribute("visibility", "hidden"); dots.forEach(function (c) { c.setAttribute("visibility", "hidden"); }); tip.hide(); }
+      hit.addEventListener("pointermove", function (ev) {
+        var r = svg.getBoundingClientRect(), px = ev.clientX - r.left;
+        at(Math.max(0, Math.min(dates.length - 1, Math.round((px - m.l) / (iw / Math.max(1, dates.length - 1))))));
+      });
+      hit.addEventListener("pointerleave", off);
+      svg.addEventListener("focus", function () { at(cur); });
+      svg.addEventListener("blur", off);
+      svg.addEventListener("keydown", function (ev) {
+        if (ev.key === "ArrowLeft") { at(Math.max(0, cur - 1)); ev.preventDefault(); }
+        if (ev.key === "ArrowRight") { at(Math.min(dates.length - 1, cur + 1)); ev.preventDefault(); }
+      });
+    }
+    requestAnimationFrame(draw);
+    window.addEventListener("resize", function () { if (wrap.isConnected) draw(); });
+    var rows = dates.map(function (d, i) { return [d].concat(series.map(function (sr) { return fmt(sr.values[i]); })); });
+    var nums = series.map(function (_, i) { return i + 1; });
+    return el("div", null, wrap, tableView([T.date].concat(series.map(function (sr) { return sr.label; })), rows, nums));
+  }
+
+  // ---------------------------------------------------------------- horizontal bars (one series)
+  function hbars(items, color) {
+    if (!items.length) return el("div", { "class": "empty", text: T.noData });
+    var max = Math.max.apply(null, items.map(function (i) { return i.value; })) || 1;
+    var box = el("div", { "class": "chart" });
+    var grid = el("div", { "class": "hbars" });
+    var tip = makeTooltip(box);
+    items.forEach(function (it) {
+      var row = el("div", { "class": "row", tabindex: "0", "aria-label": it.label + ": " + fmt(it.value) },
+        el("div", { "class": "bar", style: "width:" + (it.value / max * 85).toFixed(2) + "%;background:" + (it.color || color || "var(--s1)") }),
+        el("span", { "class": "val", text: fmt(it.value) + (it.extra ? " · " + it.extra : "") }));
+      function show() {
+        var br = box.getBoundingClientRect(), rr = row.getBoundingClientRect();
+        tip.show(rr.left - br.left + (it.value / max) * rr.width * 0.85, rr.top - br.top, it.label, [{ color: it.color || color || "var(--s1)", value: it.value, label: it.unit || T.requests }]);
+      }
+      row.addEventListener("pointerenter", show); row.addEventListener("focus", show);
+      row.addEventListener("pointerleave", tip.hide); row.addEventListener("blur", tip.hide);
+      grid.appendChild(el("div", { "class": "lbl", title: it.label }, it.dot ? chip(it.dot, it.label) : it.label));
+      grid.appendChild(row);
+    });
+    box.appendChild(grid);
+    return box;
+  }
+
+  function segBar(counts) {
+    var total = STATES.reduce(function (a, k) { return a + (counts[k] || 0); }, 0);
+    var bar = el("div", { "class": "seg", role: "img", "aria-label": STATES.map(function (k) { return T[k] + " " + (counts[k] || 0); }).join(", ") });
+    if (!total) return bar;
+    STATES.forEach(function (k) {
+      if (counts[k]) bar.appendChild(el("span", { style: "flex:" + counts[k] + " 0 0;background:" + STATE_COLOR[k], title: T[k] + ": " + fmt(counts[k]) }));
+    });
+    return bar;
+  }
+
+  // ---------------------------------------------------------------- sections
+  function warnings(site) {
+    var list = (DATA.warnings || []).filter(function (w) { return !w.site || site === "*" || w.site === site; });
+    if (!list.length) return null;
+    var level = { proxy_unresolved: "serious", unparsed_lines: "warning", no_sitemap: "warning", no_robots: "warning", offline: "warning", ranges_missing: "warning" };
+    return el("div", null, list.map(function (w) {
+      var vars = { site: w.site || "", count: fmt(w.count), share: pct(w.share), urls: (w.urls || []).join(", ") };
+      return el("div", { "class": "warn" }, el("span", { "class": "icon " + (level[w.code] || "warning"), "aria-hidden": "true", text: "!" }),
+        el("div", null, el("b", { text: tr("w_" + w.code) }), el("span", { "class": "detail", text: tr("w_" + w.code + "_d", vars) })));
+    }));
+  }
+
+  function tiles(r) {
+    var cov = r.coverage;
+    function tile(label, value, note, hero) {
+      return el("div", { "class": "tile" + (hero ? " hero" : "") }, el("div", { "class": "label", text: label }), el("div", { "class": "value", text: value }), el("div", { "class": "note", text: note }));
+    }
+    return el("div", { "class": "tiles kpi" },
+      tile(T.kpiUser, compact(r.categories.user.requests), T.kpiUserNote, true),
+      tile(T.kpiAi, compact(r.ai_requests), T.kpiAiNote),
+      tile(T.kpiRef, compact(r.referrals.total), T.kpiRefNote),
+      tile(T.kpiBlocked, pct(r.blocked.share), fmt(r.blocked.requests) + " · " + T.kpiBlockedNote),
+      tile(T.kpiSpoofed, compact(r.spoofed.total), T.kpiSpoofedNote),
+      tile(T.kpiCoverage, cov ? pct(cov.crawled_by_ai / Math.max(1, cov.sitemap_total)) : "–", cov ? fmt(cov.crawled_by_ai) + " / " + fmt(cov.sitemap_total) : T.notChecked));
+  }
+
+  function botsOf(r, cats) {
+    return Object.keys(r.bots).map(function (n) { var b = r.bots[n]; b.name = n; return b; })
+      .filter(function (b) { return !cats || cats.indexOf(b.category) >= 0; });
+  }
+
+  function secUser(r) {
+    var bots = botsOf(r, ["user"]).filter(function (b) { return b.requests; });
+    return card(T.secUser, T.secUserLead, el("div", { "class": "grid2" },
+      el("div", null, el("h3", { text: T.bot }), hbars(bots.map(function (b) { return { label: b.name + " · " + b.operator, value: b.requests }; }), CAT_COLOR.user)),
+      el("div", null, el("h3", { text: T.path }), el("div", { "class": "scroll" }, table([T.path, T.requests], r.top_pages.user.slice(0, 30).map(function (p) { return [{ path: p.path }, fmt(p.requests)]; }), [1])))));
+  }
+
+  function secTrend(r) {
+    var dates = dayRange(r.period.start, r.period.end);
+    var series = AI_CATS.filter(function (c) { return r.categories[c].requests; }).map(function (c) {
+      return { label: catLabel(c), color: CAT_COLOR[c], values: dates.map(function (d) { return (r.daily[d] || {})[c] || 0; }) };
+    });
+    if (!series.length || !dates.length) return card(T.secTrend, T.secTrendLead, el("div", { "class": "empty", text: T.noData }));
+    // Small multiples: training volume would flatten user-triggered / search lines on a shared axis.
+    return card(T.secTrend, T.secTrendLead + " " + T.trendScale, el("div", { "class": "grid3" }, series.map(function (sr) {
+      var total = sr.values.reduce(function (a, b) { return a + b; }, 0);
+      return el("div", null, el("h3", null, chip(sr.color, sr.label + " · " + fmt(total))), lineChart(dates, [sr], 180));
+    })));
+  }
+
+  function secBots(r) {
+    var bots = botsOf(r);
+    var robots = {};
+    ((r.robots || {}).tokens || []).forEach(function (t) { robots[t.token] = t; });
+    var top = bots.filter(function (b) { return b.requests; }).slice(0, 15).map(function (b) {
+      return { label: b.name, value: b.requests, dot: CAT_COLOR[b.category], color: CAT_COLOR[b.category] };
+    });
+    var legend = el("div", { "class": "legend" }, STATES.map(function (k) { return el("span", null, el("span", { "class": "sw", style: "background:" + STATE_COLOR[k] }), T[k]); }));
+    var catLegend = el("div", { "class": "legend" }, AI_CATS.concat(["classic-search"]).map(function (c) { return el("span", null, el("span", { "class": "sw", style: "background:" + CAT_COLOR[c] }), catLabel(c)); }));
+    var rows = bots.map(function (b) {
+      var blocked = (b.status["403"] || 0) + (b.status["429"] || 0);
+      var rt = robots[b.robots_token];
+      var v = b.verification;
+      return [b.name, b.operator, chip(CAT_COLOR[b.category], catLabel(b.category)), fmt(b.requests), fmt(b.unique_pages),
+        el("div", { style: "min-width:140px" }, segBar(v), el("div", { "class": "muted", style: "font-size:11.5px", text: STATES.filter(function (k) { return v[k]; }).map(function (k) { return T[k] + " " + fmt(v[k]); }).join(" · ") })),
+        b.requests ? pct(blocked / b.requests) : "–", rt ? (rt.allowed_root ? T.yes : T.no) : "–", b.last_seen ? b.last_seen.slice(0, 16).replace("T", " ") : "–"];
+    });
+    return card(T.secBots, T.secBotsLead, catLegend, hbars(top), el("h3", { style: "margin-top:20px", text: T.verification }), legend,
+      el("div", { "class": "scroll", style: "max-height:560px" }, table([T.bot, T.operator, T.category, T.requests, T.pages, T.verification, T.blocked, T.robotsAllowed, T.lastSeen], rows, [3, 4, 6])));
+  }
+
+  function secPages(r) {
+    var cats = ["user", "search", "training"].concat(r.top_pages.agent.length ? ["agent"] : []).concat(r.top_pages["other-ai"].length ? ["other-ai"] : []);
+    return card(T.secPages, T.secPagesLead, el("div", { "class": "grid3" }, cats.map(function (c) {
+      return el("div", null, el("h3", null, chip(CAT_COLOR[c], catLabel(c))),
+        el("div", { "class": "scroll" }, table([T.path, T.requests], r.top_pages[c].slice(0, 25).map(function (p) { return [{ path: p.path }, fmt(p.requests)]; }), [1])));
+    })));
+  }
+
+  function secCoverage(r) {
+    var cov = r.coverage;
+    if (!cov) return card(T.secCoverage, T.secCoverageLead, el("div", { "class": "empty", text: T.w_no_sitemap }));
+    var cats = AI_CATS.concat(["classic-search"]);
+    var rows = cats.map(function (c) {
+      var n = cov.by_category[c] || 0, share = n / Math.max(1, cov.sitemap_total);
+      return [chip(CAT_COLOR[c], catLabel(c)), el("div", { "class": "meter", role: "img", "aria-label": pct(share) }, el("span", { style: "width:" + (share * 100).toFixed(1) + "%" })), pct(share), fmt(n)];
+    });
+    var never = cov.never_crawled;
+    return card(T.secCoverage, T.secCoverageLead,
+      el("div", { "class": "tiles" },
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.sitemapTotal }), el("div", { "class": "value", text: fmt(cov.sitemap_total) })),
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.crawledByAi }), el("div", { "class": "value", text: fmt(cov.crawled_by_ai) })),
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.neverCrawled }), el("div", { "class": "value", text: fmt(never.length) }))),
+      el("div", { "class": "grid2" },
+        el("div", null, el("h3", { text: T.coverageBy }), table([T.category, "", "%", T.pages], rows, [2, 3])),
+        el("div", null, el("h3", { text: T.neverCrawled }),
+          never.length > LIST_LIMIT ? el("div", { "class": "muted", text: tr("showing", { n: LIST_LIMIT }) }) : null,
+          el("div", { "class": "scroll" }, table([T.path], never.slice(0, LIST_LIMIT).map(function (p) { return [{ path: p }]; }))))));
+  }
+
+  function secReferrals(r) {
+    var ref = r.referrals;
+    var dates = dayRange(r.period.start, r.period.end);
+    var sources = Object.keys(ref.by_source);
+    var items = sources.map(function (k) { return { label: k + " · " + ref.by_source[k].operator, value: ref.by_source[k].visits, unit: T.visits }; });
+    var daily = {};
+    sources.forEach(function (k) { var d = ref.by_source[k].daily; for (var day in d) daily[day] = (daily[day] || 0) + d[day]; });
+    var landing = [];
+    sources.forEach(function (k) { ref.by_source[k].landing_pages.forEach(function (p) { landing.push([k, { path: p.path }, fmt(p.visits), p.visits]); }); });
+    landing.sort(function (a, b) { return b[3] - a[3]; });
+    var ops = (r.operators || []).filter(function (o) { return o.crawls || o.referrals; });
+    return card(T.secRef, T.secRefLead,
+      el("div", { "class": "tiles" },
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.kpiRef }), el("div", { "class": "value", text: fmt(ref.total) })),
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.humanPv }), el("div", { "class": "value", text: fmt(ref.human_pageviews) })),
+        el("div", { "class": "tile" }, el("div", { "class": "label", text: T.refShare }), el("div", { "class": "value", text: pct(ref.total / Math.max(1, ref.human_pageviews)) }))),
+      ref.total ? el("div", { "class": "grid2" },
+        el("div", null, el("h3", { text: T.source }), hbars(items, "var(--s1)")),
+        el("div", null, el("h3", { text: T.kpiRef }), lineChart(dates, [{ label: T.kpiRef, color: "var(--s1)", values: dates.map(function (d) { return daily[d] || 0; }) }]))) : el("div", { "class": "empty", text: T.noData }),
+      el("h3", { style: "margin-top:20px", text: T.ratio }),
+      table([T.operator, T.crawls, T.userFetches, T.referrals, T.ratio], ops.map(function (o) {
+        return [o.operator, fmt(o.crawls), fmt(o.user_fetches), fmt(o.referrals), o.crawls_per_referral == null ? "–" : fmt(o.crawls_per_referral) + " : 1"];
+      }), [1, 2, 3, 4]),
+      landing.length ? el("div", null, el("h3", { style: "margin-top:20px", text: T.landing }),
+        el("div", { "class": "scroll" }, table([T.source, T.landing, T.visits], landing.slice(0, 50).map(function (l) { return l.slice(0, 3); }), [2]))) : null);
+  }
+
+  function secRobots(r) {
+    var rb = r.robots, llms = r.llms;
+    var yn = function (v) { return v == null ? T.notChecked : v ? T.yes : T.no; };
+    var body = [];
+    if (rb && rb.found) {
+      body.push(el("div", { "class": "muted", text: rb.source }));
+      body.push(table([T.token, T.operator, T.category, T.explicit, T.robotsAllowed, T.violations], rb.tokens.map(function (t) {
+        return [t.token, t.operator, chip(CAT_COLOR[t.category], catLabel(t.category)), yn(t.explicit), yn(t.allowed_root), fmt(t.violations)];
+      }), [5]));
+      body.push(el("h3", { style: "margin-top:16px", text: T.policyTokens }));
+      body.push(table([T.token, T.operator, T.meaning, T.explicit, T.robotsAllowed], rb.policy_tokens.map(function (p) {
+        return [p.token, p.operator, p.meaning, yn(p.explicit), yn(p.allowed_root)];
+      })));
+    } else {
+      body.push(el("div", { "class": "empty", text: rb ? T.w_no_robots : T.notChecked }));
+    }
+    body.push(el("h3", { style: "margin-top:16px", text: "llms.txt" }));
+    var fetchRows = Object.keys(llms.fetches).map(function (k) { return [k, "llms.txt", fmt(llms.fetches[k])]; })
+      .concat(Object.keys(llms.robots_fetches).map(function (k) { return [k, "robots.txt", fmt(llms.robots_fetches[k])]; }));
+    body.push(table(["", T.llmsExists], [["llms.txt", yn(llms.exists["llms.txt"])], ["llms-full.txt", yn(llms.exists["llms-full.txt"])]]));
+    body.push(el("h3", { style: "margin-top:16px", text: T.llmsFetches + " / " + T.robotsFetches }));
+    body.push(table([T.bot, "", T.requests], fetchRows, [2]));
+    return card(T.secRobots, T.secRobotsLead, body);
+  }
+
+  function secSpoof(r) {
+    if (!r.spoofed.total) return null;
+    return card(T.secSpoof, T.secSpoofLead,
+      table([T.ip, T.bot, T.requests], r.spoofed.top_ips.map(function (x) { return [x.ip, x.bot, fmt(x.requests)]; }), [2]));
+  }
+
+  function footer() {
+    var cfg = "# /etc/nginx/conf.d/cloudflare-realip.conf\n" +
+      "# https://www.cloudflare.com/ips-v4  https://www.cloudflare.com/ips-v6\n" +
+      "set_real_ip_from 173.245.48.0/20;\nset_real_ip_from 103.21.244.0/22;\n# ... one line per Cloudflare range ...\n" +
+      "real_ip_header CF-Connecting-IP;";
+    return el("footer", null, el("h3", { text: T.notes }), el("ul", null,
+      el("li", { text: T.note1 }), el("li", { text: T.note2 }), el("li", { text: T.note3 }),
+      el("li", null, T.note4, el("pre", { text: cfg }))),
+      el("div", { text: T.generatedBy + " " + DATA.tool.version + " · " + T.generated + " " + DATA.generated }));
+  }
+
+  // ---------------------------------------------------------------- page
+  var app = document.getElementById("app");
+  var siteNames = Object.keys(DATA.sites);
+  var current = DATA.all ? "*" : siteNames[0];
+
+  function render() {
+    app.textContent = "";
+    var r = current === "*" ? DATA.all : DATA.sites[current];
+    var title = current === "*" ? T.allSites : current;
+    app.appendChild(el("header", null, el("h1", { text: T.title + " · " + (title || "") }),
+      el("div", { "class": "sub", text: r ? T.period + " " + r.period.start + " → " + r.period.end + " (" + r.period.days + " " + T.days + ") · " + T.linesParsed + " " + fmt(r.lines.parsed) + " / " + fmt(r.lines.total) : "" })));
+    var filters = el("div", { "class": "filters" });
+    if (siteNames.length > 1 || DATA.all) {
+      var sel = el("select", { "aria-label": T.site, onchange: function (e) { current = e.target.value; render(); } });
+      if (DATA.all) sel.appendChild(el("option", { value: "*", text: T.allSites }));
+      siteNames.forEach(function (n) { sel.appendChild(el("option", { value: n, text: n })); });
+      sel.value = current;
+      filters.appendChild(el("label", { text: T.site }));
+      filters.appendChild(sel);
+    }
+    filters.appendChild(el("button", { "class": "theme-toggle", type: "button", text: T.theme, onclick: function () {
+      var root = document.documentElement, dark = root.getAttribute("data-theme") === "dark" ||
+        (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      root.setAttribute("data-theme", dark ? "light" : "dark");
+      render();
+    } }));
+    app.appendChild(filters);
+    if (!r) { app.appendChild(el("div", { "class": "empty", text: T.noData })); return; }
+    append(app, [warnings(current), tiles(r), secUser(r), secTrend(r), secBots(r), secPages(r), secCoverage(r), secReferrals(r),
+      current === "*" ? null : secRobots(r), secSpoof(r), footer()]);
+  }
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-crawler-log"
+dynamic = ["version"]
+description = "See which AI crawlers (GPTBot, ClaudeBot, PerplexityBot, ...) read your website, from raw nginx/Apache/Cloudflare logs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+dependencies = []
+keywords = ["seo", "geo", "ai-crawler", "gptbot", "claudebot", "log-analysis", "nginx", "robots.txt", "llms.txt"]
+classifiers = ["Programming Language :: Python :: 3", "Environment :: Console", "Topic :: Internet :: Log Analysis"]
+
+[project.scripts]
+ai-crawler-log = "ai_crawler_log.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "skills/ai-crawler-log/scripts" }
+packages = ["ai_crawler_log"]
+
+[tool.setuptools.package-data]
+ai_crawler_log = ["data/*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "ai_crawler_log.__version__" }

@@ -1,0 +1,5 @@
+{
+  "name": "ai-crawler-log",
+  "description": "Analyze web server logs to see which AI crawlers (GPTBot, ClaudeBot, PerplexityBot, ...) read your site, verify them, and produce an HTML report.",
+  "version": "0.1.0"
+}
